@@ -1,0 +1,21 @@
+
+version: '3'
+services:
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ai_lawsuits
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+
+  backend:
+    image: python:3.10
+    working_dir: /app
+    volumes:
+      - ..:/app
+    command: bash -c "pip install fastapi uvicorn pymysql pandas requests && uvicorn backend.main:app --host 0.0.0.0 --port 8007"
+    ports:
+      - "8007:8007"
