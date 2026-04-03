@@ -608,6 +608,7 @@ function renderMap(stats, countryType) {
             pathEl.onclick = () => showStateCasesModal(displayInfo, cases);
 
             if (labelElem) {
+                // Ensure count is displayed as requested: e.g., CA (73)
                 labelElem.textContent = `${baseDisplayCode} (${cases.length})`;
                 labelElem.classList.add('active-label');
             }
