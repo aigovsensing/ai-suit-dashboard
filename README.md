@@ -65,6 +65,48 @@ export PYTHONPATH=$PYTHONPATH:.
 python3 collector/main.py
 ```
 
+### 3. 🤖 Auto-Start with systemd (Service Setup)
+서버 부팅 시 대시보드를 자동으로 실행하려면 `systemd` 서비스를 설정하세요.
+
+#### 1) 서비스 파일 생성
+`/etc/systemd/system/ai-suit-dashboard.service` 파일을 만들고 아래 내용을 입력합니다.
+(경로 `/work/github-aigovsensing/ai-suit-dashboard`는 실제 환경에 맞춰 수정하세요.)
+
+```ini
+[Unit]
+Description=AI Suit Dashboard Docker Compose Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/work/github-aigovsensing/ai-suit-dashboard
+ExecStart=/usr/bin/docker-compose -f docker/docker-compose.yml up
+ExecStop=/usr/bin/docker-compose -f docker/docker-compose.yml down
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### 2) 서비스 활성화 및 실행
+다음 명령어로 서비스를 등록하고 부팅 시 자동 실행되도록 설정합니다.
+
+```bash
+# 시스템 데몬 재로드
+sudo systemctl daemon-reload
+
+# 부팅 시 자동 실행 활성화
+sudo systemctl enable ai-suit-dashboard.service
+
+# 현재 시점에서 즉시 실행
+sudo systemctl start ai-suit-dashboard.service
+
+# 실시간 상태 확인
+sudo systemctl status ai-suit-dashboard.service
+```
+
 ---
 
 ## 📊 Key Features & UI/UX
