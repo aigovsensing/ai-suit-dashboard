@@ -123,7 +123,15 @@ sudo systemctl status ai-suit-dashboard.service
 
 ---
 
-## 📄 Maintenance & Reprodubilicity
+## 📸 Demo Screenshots
+
+| Global Litigation Map | USA Regional Heatmap | Real-time Case Search |
+| :---: | :---: | :---: |
+| ![Global View](/var/www/invain/.gemini/antigravity/brain/d1ebc7cc-4174-42a5-b969-fb0425921f69/demo_global_map_png_1775216153968.png) | ![USA View](/var/www/invain/.gemini/antigravity/brain/d1ebc7cc-4174-42a5-b969-fb0425921f69/demo_usa_map_png_1775216173609.png) | ![Search View](/var/www/invain/.gemini/antigravity/brain/d1ebc7cc-4174-42a5-b969-fb0425921f69/demo_search_feature_png_1775216188169.png) |
+
+---
+
+## 📄 Maintenance & Reproducibility
 본 레포지토리는 다음과 같은 방식으로 유지보수 및 재현 가능성을 보장합니다.
 
 1.  **데이터 무결성**: `./data` 폴더에 소송 스냅샷 CSV 파일을 저장하여 서버 재부팅 시에도 동일한 시각화 결과 재현 가능.
