@@ -1,9 +1,8 @@
-
 :root {
-    /* Primary Colors - Deep Navy & Vibrant Indigo */
-    --primary: #6366f1;
-    --primary-bright: #818cf8;
-    --primary-glow: rgba(99, 102, 241, 0.4);
+    /* Primary Colors - Dynamic Orange & Warm Amber */
+    --primary: #f59e0b;
+    --primary-bright: #fbbf24;
+    --primary-glow: rgba(245, 158, 11, 0.4);
     
     /* Backgrounds - High Contrast Dark Theme */
     --bg-darker: #020617;
@@ -12,10 +11,8 @@
     --card-hover: rgba(30, 41, 59, 0.8);
     --glass: rgba(15, 23, 42, 0.6);
     
-    /* Accents - Cyan & Orange */
-    --accent: #22d3ee;
-    --accent-orange: #f97316;
-    --accent-amber: #fbbf24;
+    /* Accents - Warm Vibrant Orange */
+    --accent: #f97316;
     
     /* Text - High Legibility Whites & Slates */
     --text-main: #f8fafc;
@@ -922,17 +919,18 @@ main {
 /* Tooltip */
 .tooltip {
     position: absolute;
-    background: var(--bg-dark);
+    padding: 12px 18px;
+    background: #10b981;
     color: white;
-    padding: 10px 16px;
-    border-radius: 12px;
-    display: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
     pointer-events: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border: 1px solid var(--border-bright);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-    z-index: 4000;
+    z-index: 3000;
+    display: none;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
 }
 
 /* Warning Box */

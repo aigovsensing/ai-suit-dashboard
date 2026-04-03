@@ -35,6 +35,28 @@ const COUNTRY_LABEL_OVERRIDE = {
     'gb': 'UK'
 };
 
+const FULL_NAMES = {
+    // US States
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+    'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+    'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+    'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+    'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+    'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+    'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+    'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
+    'DC': 'District of Columbia',
+    // Countries
+    'us': 'USA', 'kr': 'South Korea', 'de': 'Germany', 'gb': 'United Kingdom', 'fr': 'France',
+    'ca': 'Canada', 'jp': 'Japan', 'cn': 'China', 'in': 'India', 'au': 'Australia', 'br': 'Brazil',
+    'it': 'Italy', 'es': 'Spain', 'ru': 'Russia', 'mx': 'Mexico', 'nl': 'Netherlands', 'se': 'Sweden',
+    'sg': 'Singapore', 'il': 'Israel', 'ch': 'Switzerland', 'at': 'Austria', 'be': 'Belgium',
+    'fi': 'Finland', 'no': 'Norway', 'dk': 'Denmark', 'ie': 'Ireland', 'nz': 'New Zealand',
+    'tw': 'Taiwan', 'hk': 'Hong Kong', 'mo': 'Macau', 'pk': 'Pakistan', 'tr': 'Turkey', 'za': 'South Africa'
+};
+
 
 let allCases = [];
 
@@ -495,11 +517,18 @@ function renderMap(stats, countryType) {
         const pathEl = el.tagName === 'path' ? el : el.querySelector('path');
         if (!pathEl) return;
 
+        // Reset styles first
         pathEl.classList.remove('has-cases');
+        pathEl.removeAttribute('data-count');
         pathEl.style.removeProperty('--intensity');
 
         const baseDisplayCode = (COUNTRY_LABEL_OVERRIDE[id] || id).toUpperCase();
+        const fullName = FULL_NAMES[id] || baseDisplayCode;
         const labelElem = document.querySelector(`.state-label[data-loc="${id}"]`);
+        
+        // Tooltip should always show, even with 0 cases
+        pathEl.onmouseover = (e) => showTooltip(e, `${fullName}: ${cases.length} litigation(s)`);
+        pathEl.onmouseout = hideTooltip;
 
         if (cases.length > 0) {
             pathEl.classList.add('has-cases');
@@ -509,18 +538,15 @@ function renderMap(stats, countryType) {
             const intensity = 0.3 + (0.7 * (Math.log(cases.length + 1) / Math.log(maxCount + 1)));
             pathEl.style.setProperty('--intensity', intensity);
             
-            pathEl.onclick = () => showStateCasesModal(id, cases);
-            pathEl.onmouseover = (e) => showTooltip(e, `${baseDisplayCode}: ${cases.length} litigation(s)`);
-            pathEl.onmouseout = hideTooltip;
+            pathEl.onclick = () => showStateCasesModal(fullName, cases);
 
             if (labelElem) {
                 labelElem.textContent = `${baseDisplayCode} (${cases.length})`;
                 labelElem.classList.add('active-label');
             }
         } else {
-            pathEl.onclick = null;
-            pathEl.onmouseover = null;
-            pathEl.onmouseout = null;
+            // Case where length is 0
+            pathEl.onclick = () => showStateCasesModal(fullName, []);
             if (labelElem) {
                 labelElem.textContent = baseDisplayCode;
                 labelElem.classList.remove('active-label');
@@ -566,12 +592,12 @@ function renderSidebar(cases) {
     });
 }
 
-function showStateCasesModal(state, cases) {
+function showStateCasesModal(locationName, cases) {
     const modal = document.getElementById('case-modal');
     const title = document.getElementById('modal-title');
     const list = document.getElementById('modal-case-list');
 
-    title.textContent = `Copyright Litigation in ${state}`;
+    title.textContent = `Litigation in ${locationName}`;
     list.innerHTML = "";
     
     cases.forEach(c => {
