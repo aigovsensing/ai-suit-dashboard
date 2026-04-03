@@ -191,13 +191,29 @@ async function initApp() {
     // Initial UI state
     updateToggleBtnText();
 
-    // Help Modal
+    // Help Modal (Dynamic User Guide Loader)
     const helpBtn = document.getElementById('help-btn');
     const helpModal = document.getElementById('help-modal');
     const closeHelpBtn = document.getElementById('close-help-btn');
+    const helpContentPlaceholder = document.getElementById('help-content-placeholder');
     
+    async function openHelpModal() {
+        if (helpModal) helpModal.style.display = 'flex';
+        if (helpContentPlaceholder) {
+            try {
+                const response = await fetch('/doc/user_guide.md');
+                if (!response.ok) throw new Error("Documentation not found.");
+                const markdown = await response.text();
+                // Render markdown to HTML using marked
+                helpContentPlaceholder.innerHTML = marked.parse(markdown);
+            } catch (err) {
+                helpContentPlaceholder.innerHTML = `<p class="error-msg">Failed to load User Guide: ${err.message}</p>`;
+            }
+        }
+    }
+
     if (helpBtn && helpModal && closeHelpBtn) {
-        helpBtn.onclick = () => helpModal.style.display = 'flex';
+        helpBtn.onclick = openHelpModal;
         closeHelpBtn.onclick = () => helpModal.style.display = 'none';
         window.addEventListener('click', (e) => {
             if (e.target === helpModal) helpModal.style.display = 'none';

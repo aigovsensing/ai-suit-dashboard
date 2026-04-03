@@ -233,35 +233,23 @@
         </div>
     </div>
 
-    <!-- Help Modal -->
+    <!-- Help Modal (Dynamic User Guide) -->
     <div id="help-modal" class="modal-overlay">
-        <div class="modal">
+        <div class="modal guide-modal">
             <div class="detail-header">
-                <h2>📊 AI Litigation Dashboard User Guide</h2>
+                <h2>📖 User Guide</h2>
             </div>
-            <div class="detail-content help-content">
-                <p>본 대시보드는 글로벌 인공지능 관련 소송 현황을 실시간으로 파악할 수 있는 종합 상황판입니다.</p>
-                
-                <h4>주요 기능:</h4>
-                <ul>
-                    <li><strong>데이터셋 선택:</strong> 왼쪽 상단 드롭다운에서 최신 소송 데이터를 선택합니다.</li>
-                    <li><strong>국가/지역 필터:</strong> 미국 전체 또는 전세계 지도를 전환하여 조망할 수 있습니다.</li>
-                    <li><strong>상태 필터:</strong> 준비, 시작, 1심, 항소, 종료 등 소송 진행 단계별로 필터링이 가능합니다.</li>
-                    <li><strong>인터랙티브 지도:</strong> 지도의 국가 또는 주를 클릭하면 상세 소송 목록이 팝업됩니다.</li>
-                    <li><strong>요약 리포트:</strong> 지도 하단에서 통계 테이블과 텍스트 요약을 확인하고 CSV로 내보낼 수 있습니다.</li>
-                </ul>
-
-                <h4>사용 팁:</h4>
-                <ul>
-                    <li>마우스 휠로 지도를 <strong>확대/축소</strong>할 수 있으며, 클릭 후 <strong>드래그</strong>하여 이동할 수 있습니다.</li>
-                    <li>오른쪽 하단의 <strong>⟲</strong> 버튼을 눌러 지도 위치를 초기화할 수 있습니다.</li>
-                    <li>색상이 진할수록 해당 지역의 소송 건수가 많음을 의미합니다 (Heatmap).</li>
-                </ul>
+            <div id="help-content-placeholder" class="detail-content help-content markdown-body">
+                <p><span class="loader"></span> Loading documentation...</p>
             </div>
-            <button class="close-btn" id="close-help-btn">닫기</button>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="close-help-btn">Close</button>
+            </div>
         </div>
     </div>
 
+    <!-- Markdown Parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
