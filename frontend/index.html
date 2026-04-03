@@ -12,34 +12,40 @@
 </head>
 <body>
     <header>
-        <div class="logo">AI-LITIGATION DASHBOARD</div>
+        <div class="logo">AI-LITIGATION<span>DASHBOARD</span></div>
         <div class="controls">
-            <select id="csv-select">
-                <option value="">Select Dataset...</option>
-            </select>
-            <select id="country-select">
-                <option value="USA">국가: 미국</option>
-                <option value="WORLD" selected>국가: 전세계</option>
-            </select>
+            <div class="control-group">
+                <label for="csv-select">Dataset</label>
+                <select id="csv-select">
+                    <option value="">Select Dataset...</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="country-select">Region</label>
+                <select id="country-select">
+                    <option value="USA">국가: 미국 (USA)</option>
+                    <option value="WORLD" selected>국가: 전세계 (Global)</option>
+                </select>
+            </div>
             <div class="status-filter-container">
                 <button type="button" id="status-toggle-btn" class="status-toggle-btn">진행상태: 전체</button>
                 <div id="status-dropdown" class="status-dropdown">
-                    <label><input type="checkbox" value="준비" checked> 준비</label>
-                    <label><input type="checkbox" value="시작" checked> 시작</label>
-                    <label><input type="checkbox" value="1심" checked> 1심</label>
-                    <label><input type="checkbox" value="2심" checked> 2심</label>
-                    <label><input type="checkbox" value="판결" checked> 판결</label>
-                    <label><input type="checkbox" value="항소" checked> 항소</label>
-                    <label><input type="checkbox" value="종" checked> 종료/종결</label>
+                    <label><input type="checkbox" value="준비" checked> <span>준비 (Ready)</span></label>
+                    <label><input type="checkbox" value="시작" checked> <span>시작 (Started)</span></label>
+                    <label><input type="checkbox" value="1심" checked> <span>1심 (1st Instance)</span></label>
+                    <label><input type="checkbox" value="2심" checked> <span>2심 (2nd Instance)</span></label>
+                    <label><input type="checkbox" value="판결" checked> <span>판결 (Judgment)</span></label>
+                    <label><input type="checkbox" value="항소" checked> <span>항소 (Appeal)</span></label>
+                    <label><input type="checkbox" value="종" checked> <span>종료/결 (Closed)</span></label>
                 </div>
             </div>
-            <button id="visualize-btn" class="visualize-btn">Update Dashboard</button>
-            <button id="help-btn" class="help-btn">Help</button>
+            <button id="visualize-btn" class="visualize-btn">Update Display</button>
+            <button id="help-btn" class="help-btn">User Guide</button>
         </div>
     </header>
 
     <main>
-        <section class="sidebar">
+        <aside class="sidebar">
             <div class="status-summary" id="status-summary">
                 <h3>소송 진행 현황</h3>
                 <div id="status-count-badges" class="status-count-badges">
@@ -53,15 +59,15 @@
                     <p class="empty-msg">데이터를 선택하고 대시보드를 갱신하세요.</p>
                 </div>
             </div>
-        </section>
+        </aside>
 
         <section class="map-container">
-            <div id="status-display">
-                <h2>AI Litigation Map</h2>
+            <header class="map-header" id="status-display">
+                <h2>AI Litigation Heatmap</h2>
                 <div class="total-count">0</div>
                 <div id="share-info" class="share-info"></div>
                 <div id="active-status-chips"></div>
-            </div>
+            </header>
             
             <div class="map-viewport" id="map-viewport">
                 <div id="map-svg-wrapper">
@@ -180,6 +186,13 @@
                         <g id="world-paths"></g>
                         <g id="world-labels"></g>
                     </svg>
+                </div>
+
+                <!-- Zoom Controls Moved Inside Viewport -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn" id="zoom-in" title="Zoom In">+</button>
+                    <button class="zoom-btn" id="zoom-out" title="Zoom Out">−</button>
+                    <button class="zoom-btn" id="zoom-reset" title="Reset View">⟲</button>
                 </div>
             </div>
 

@@ -194,7 +194,8 @@ async function handleVisualize() {
     const url = fileName ? `/api/cases?file_name=${fileName}` : '/api/cases';
     
     const btn = document.getElementById('visualize-btn');
-    btn.textContent = "Loading...";
+    const originalText = btn.textContent;
+    btn.innerHTML = '<span class="loader"></span> 갱신 중...';
     btn.disabled = true;
 
     try {
@@ -212,7 +213,7 @@ async function handleVisualize() {
         console.error("Error fetching case data:", err);
         alert("Failed to load data: " + err.message);
     } finally {
-        btn.textContent = "Visualize";
+        btn.textContent = originalText;
         btn.disabled = false;
     }
 }
@@ -491,21 +492,21 @@ function renderMap(stats, countryType) {
         const id = el.id || el.parentElement.id;
         const cases = stats[id] || [];
         
-        // Use el for the path styling, but handle g groups if necessary
         const pathEl = el.tagName === 'path' ? el : el.querySelector('path');
         if (!pathEl) return;
 
         pathEl.classList.remove('has-cases');
         pathEl.style.removeProperty('--intensity');
 
-        const labelElem = document.querySelector(`.state-label[data-loc="${id}"]`);
-        const itemElem = document.querySelector(`.small-state-list-item[data-loc="${id}"]`);
         const baseDisplayCode = (COUNTRY_LABEL_OVERRIDE[id] || id).toUpperCase();
+        const labelElem = document.querySelector(`.state-label[data-loc="${id}"]`);
 
         if (cases.length > 0) {
             pathEl.classList.add('has-cases');
             pathEl.setAttribute('data-count', cases.length);
-            const intensity = 0.4 + (0.6 * (cases.length / maxCount));
+            
+            // Logarithmic scale for better visual distribution
+            const intensity = 0.3 + (0.7 * (Math.log(cases.length + 1) / Math.log(maxCount + 1)));
             pathEl.style.setProperty('--intensity', intensity);
             
             pathEl.onclick = () => showStateCasesModal(id, cases);
@@ -535,20 +536,30 @@ function renderSidebar(cases) {
     if (!list) return;
     
     list.innerHTML = "";
-    if (title) title.textContent = `소송 목록 상세 (Total: ${cases.length})`;
+    if (title) title.textContent = `Case Details (${cases.length})`;
 
     if (cases.length === 0) {
-        list.innerHTML = '<p class="empty-msg">조건에 맞는 소송이 없습니다.</p>';
+        list.innerHTML = '<p class="empty-msg">No cases match the selected filters.</p>';
         return;
     }
 
     // Show first 100 for performance
-    cases.slice(0, 100).forEach(c => {
+    cases.slice(0, 100).forEach((c, index) => {
         const item = document.createElement('div');
-        item.className = 'case-item animate-in';
+        item.className = 'case-item';
+        item.style.animationDelay = `${index * 0.05}s`;
+        
+        let statusClass = 'status-default';
+        if (c.status && c.status.includes('종')) statusClass = 'status-closed';
+        else if (c.status && c.status.includes('1심')) statusClass = 'status-ongoing';
+
         item.innerHTML = `
-            <div class="case-title">${c.case_name || 'No Title'}</div>
-            <div class="case-meta">${c.court} | ${c.status}</div>
+            <div class="case-title">${c.case_name || 'Untitled Case'}</div>
+            <div class="case-meta">
+                <span class="meta-icon">📍</span> ${c.court || 'Unknown Court'}
+                <span class="meta-sep">|</span>
+                <span class="meta-status">${c.status || 'Status N/A'}</span>
+            </div>
         `;
         item.onclick = () => showCaseDetail(c);
         list.appendChild(item);
