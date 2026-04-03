@@ -93,6 +93,7 @@ const FULL_NAMES = {
 
 
 let allCases = [];
+let currentFilteredCases = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Core App Setup
@@ -157,6 +158,14 @@ async function loadWorldMap() {
 async function initApp() {
     await populateFileList();
     
+    // Search Functionality
+    const searchInput = document.getElementById('case-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            renderSidebar(currentFilteredCases);
+        });
+    }
+
     const toggleBtn = document.getElementById('status-toggle-btn');
     const dropdown = document.getElementById('status-dropdown');
     
@@ -280,13 +289,12 @@ function updateVisualization(cases, selectedStatuses) {
         return;
     }
 
-    // Filter cases by selected statuses
-    const activeCases = cases.filter(c => {
+    // 1. Filter cases by selected statuses
+    const filtered = cases.filter(c => {
         if (!c.status) return false;
         const caseStatus = c.status.trim();
         return selectedStatuses.some(s => {
             const filterValue = s.trim();
-            // Broader match for termination
             if (filterValue === '종' || filterValue === '종결' || filterValue === '종료') {
                 return caseStatus.includes('종결') || caseStatus.includes('종료') || caseStatus.includes('종');
             }
@@ -294,66 +302,87 @@ function updateVisualization(cases, selectedStatuses) {
         });
     });
 
-    const selectedCountry = document.getElementById('country-select').value;
+    // Store globally for search filtering
+    currentFilteredCases = filtered;
+
+    const countryType = document.getElementById('country-select').value;
     const stats = {};
-    
-    // Calculate global metrics for the share info
-    const worldTotal = activeCases.length;
-    const usaCases = activeCases.filter(c => {
+    let maxCount = 0;
+
+    // Calculate global metrics for metrics display
+    const worldTotal = filtered.length;
+    const usaCases = filtered.filter(c => {
         const country = (c.country || "").trim().toLowerCase();
-        // TRUST COUNTRY FIELD: Only count as US if explicitly labeled as such
         return country === 'us' || country === '미국' || country === 'usa';
     });
     const usaCount = usaCases.length;
 
-    let displayCases = [];
-    
-    if (selectedCountry === 'USA') {
-        // Only count and show USA cases
-        displayCases = usaCases;
-        displayCases.forEach(c => {
-            const loc = extractState(c.court);
-            if (loc) {
-                stats[loc] = (stats[loc] || []);
-                stats[loc].push(c);
-            }
-        });
-    } else {
-        // Show all world cases
-        displayCases = activeCases;
-        displayCases.forEach(c => {
-            const loc = extractCountry(c.country);
-            // Even if loc is null (unmapped country), we still count it in the total for World view
-            if (loc) {
-                stats[loc] = (stats[loc] || []);
-                stats[loc].push(c);
-            }
-        });
-    }
+    // 2. Further filter/group for visualization based on view (USA/World)
+    let displaySet = (countryType === 'USA') ? usaCases : filtered;
 
-    renderStats(displayCases.length, selectedStatuses, selectedCountry, worldTotal, usaCount, displayCases);
-    toggleMapDisplay(selectedCountry);
-    renderMap(stats, selectedCountry);
-    renderSidebar(displayCases);
+    displaySet.forEach(c => {
+        const id = extractLocation(c, countryType);
+        if (id) {
+            stats[id] = stats[id] || [];
+            stats[id].push(c);
+            maxCount = Math.max(maxCount, stats[id].length);
+        }
+    });
 
-    // Render the summary table/report
-    renderSummaryTable(stats, displayCases.length, selectedCountry);
+    // 3. Render all components
+    renderStats(displaySet.length, selectedStatuses, countryType, worldTotal, usaCount, displaySet);
+    toggleMapDisplay(countryType);
+    renderMap(stats, maxCount, countryType);
+    renderSidebar(displaySet);
+    renderSummaryTable(stats, displaySet.length, countryType);
 }
 
-function toggleMapDisplay(country) {
-    const usMap = document.getElementById('us-map');
-    const worldMap = document.getElementById('world-map');
-    if (country === 'USA') {
-        if (usMap) usMap.style.display = 'block';
-        if (worldMap) worldMap.style.display = 'none';
-        initUSLabels(); // Re-init to ensure BBox is correct
-        resetTransform(); // Reset zoom when switching
-    } else {
-        if (usMap) usMap.style.display = 'none';
-        if (worldMap) worldMap.style.display = 'block';
-        initWorldLabels(); // Re-init to ensure BBox is correct
-        resetTransform();
+function renderSidebar(cases) {
+    const list = document.getElementById('litigation-list');
+    const title = document.getElementById('list-title');
+    const searchInput = document.getElementById('case-search');
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    
+    if (!list) return;
+    
+    // Filter by Search Query (Client-side)
+    let displayCases = cases;
+    if (query) {
+        displayCases = cases.filter(c => {
+            const name = (c.case_name || '').toLowerCase();
+            const court = (c.court || '').toLowerCase();
+            const status = (c.status || '').toLowerCase();
+            const location = (c.location || '').toLowerCase();
+            const country = (c.country || '').toLowerCase();
+            return name.includes(query) || court.includes(query) || status.includes(query) || location.includes(query) || country.includes(query);
+        });
     }
+
+    list.innerHTML = "";
+    if (title) title.textContent = `Case Details (${displayCases.length})`;
+
+    if (displayCases.length === 0) {
+        list.innerHTML = `<p class="empty-msg">${query ? 'No cases found for "' + query + '"' : 'No cases match the selected filters.'}</p>`;
+        return;
+    }
+
+    // Performance optimization: Show first 100 items only
+    displayCases.slice(0, 100).forEach((c, index) => {
+        const item = document.createElement('div');
+        item.className = 'case-item';
+        item.style.animationDelay = `${index * 0.03}s`;
+        
+        item.innerHTML = `
+            <div class="case-title">${c.case_name || 'Untitled Case'}</div>
+            <div class="case-meta">
+                <span class="meta-icon">📍</span> ${c.court || 'Unknown Court'}
+                <span class="meta-sep">|</span>
+                <span class="meta-status">${c.status || 'Status N/A'}</span>
+            </div>
+        `;
+        item.onclick = () => showCaseDetail(c);
+        list.appendChild(item);
+    });
 }
 
 function extractCountry(countryText) {
@@ -590,41 +619,28 @@ function renderMap(stats, countryType) {
     });
 }
 
-function renderSidebar(cases) {
-    const list = document.getElementById('litigation-list');
-    const title = document.getElementById('list-title');
-    
-    if (!list) return;
-    
-    list.innerHTML = "";
-    if (title) title.textContent = `Case Details (${cases.length})`;
-
-    if (cases.length === 0) {
-        list.innerHTML = '<p class="empty-msg">No cases match the selected filters.</p>';
-        return;
+function extractLocation(c, type) {
+    if (type === 'USA') {
+        return extractState(c.court);
+    } else {
+        return extractCountry(c.country);
     }
+}
 
-    // Show first 100 for performance
-    cases.slice(0, 100).forEach((c, index) => {
-        const item = document.createElement('div');
-        item.className = 'case-item';
-        item.style.animationDelay = `${index * 0.05}s`;
-        
-        let statusClass = 'status-default';
-        if (c.status && c.status.includes('종')) statusClass = 'status-closed';
-        else if (c.status && c.status.includes('1심')) statusClass = 'status-ongoing';
-
-        item.innerHTML = `
-            <div class="case-title">${c.case_name || 'Untitled Case'}</div>
-            <div class="case-meta">
-                <span class="meta-icon">📍</span> ${c.court || 'Unknown Court'}
-                <span class="meta-sep">|</span>
-                <span class="meta-status">${c.status || 'Status N/A'}</span>
-            </div>
-        `;
-        item.onclick = () => showCaseDetail(c);
-        list.appendChild(item);
-    });
+function toggleMapDisplay(country) {
+    const usMap = document.getElementById('us-map');
+    const worldMap = document.getElementById('world-map');
+    if (country === 'USA') {
+        if (usMap) usMap.style.display = 'block';
+        if (worldMap) worldMap.style.display = 'none';
+        initUSLabels();
+        resetTransform(); 
+    } else {
+        if (usMap) usMap.style.display = 'none';
+        if (worldMap) worldMap.style.display = 'block';
+        initWorldLabels();
+        resetTransform();
+    }
 }
 
 function showStateCasesModal(locationName, cases) {

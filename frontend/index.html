@@ -46,18 +46,18 @@
 
     <main>
         <aside class="sidebar">
-            <div class="status-summary" id="status-summary">
-                <h3>소송 진행 현황</h3>
-                <div id="status-count-badges" class="status-count-badges">
-                    <!-- Dynamic Badges -->
-                </div>
-            </div>
+            <header class="sidebar-header">
+                <h2 id="list-title">Case Details</h2>
+            </header>
             
-            <div class="list-section">
-                <h3 id="list-title">소송 목록 상세</h3>
-                <div id="litigation-list" class="litigation-list">
-                    <p class="empty-msg">데이터를 선택하고 대시보드를 갱신하세요.</p>
-                </div>
+            <!-- Global Search Box -->
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="case-search" placeholder="Search cases by name, court, status...">
+            </div>
+
+            <div id="litigation-list" class="case-list-sidebar">
+                <!-- Cases dynamically populated here -->
             </div>
         </aside>
 
