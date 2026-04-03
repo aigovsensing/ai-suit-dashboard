@@ -332,7 +332,7 @@ function updateVisualization(cases, selectedStatuses) {
     // 3. Render all components
     renderStats(displaySet.length, selectedStatuses, countryType, worldTotal, usaCount, displaySet);
     toggleMapDisplay(countryType);
-    renderMap(stats, maxCount, countryType);
+    renderMap(stats, countryType);
     renderSidebar(displaySet);
     renderSummaryTable(stats, displaySet.length, countryType);
 }
@@ -567,16 +567,19 @@ function createLabel(group, x, y, id, className, textContent) {
 
 
 function renderMap(stats, countryType) {
-    const selector = countryType === 'USA' ? '#us-map .state-path' : '#world-map .state-path';
+    // Select correct map paths based on the current view
+    const selector = countryType === 'USA' ? '#us-map .state-path' : '#world-paths .state-path, #world-paths g.state-path';
     const paths = document.querySelectorAll(selector);
     
     const counts = Object.values(stats).map(c => c.length);
     const maxCount = counts.length > 0 ? Math.max(...counts) : 1;
 
     paths.forEach(el => {
-        const id = el.id || el.parentElement.id;
+        // Handle both simple paths and grouped paths
+        const id = (el.id || el.parentElement.id);
+        if (!id) return;
+
         const cases = stats[id] || [];
-        
         const pathEl = el.tagName === 'path' ? el : el.querySelector('path');
         if (!pathEl) return;
 
