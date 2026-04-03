@@ -42,5 +42,24 @@
 *   지도의 통계 요약표 아래 `Export as CSV` 버튼을 사용하여 현재 화면에 보이는 분석 결과(지역별 건수 및 점유율)를 엑셀 형식으로 저장할 수 있습니다.
 
 ---
+
+### 7. 💡 활용 팁 및 문제 해결 (Tips & Troubleshooting)
+*   **지도가 나타나지 않는 경우**: 브라우저의 캐시를 비우거나 가이드에 따라 `Update Visualization` 버튼을 한 번 더 클릭하십시오.
+*   **히트맵의 농도**: 소송 건수가 많을수록 주황색이 더 짙어지며, 이는 **로그 스케일(Logarithmic Scale)**로 계산되어 데이터의 편차를 시각적으로 효과적으로 보정합니다.
+*   **데이터 업데이트 실패**: CSV 파일의 형식이 대시보드 규격(`case_name`, `court`, `status` 등 필드 포함)을 따르고 있는지 확인하십시오.
+
+---
+
+### 8. 🔑 주요 상태값 정의 (Glossary)
+본 대시보드는 소송의 복잡한 절차를 다음과 같이 그룹화하여 보여줍니다.
+- **준비 (Ready)**: 소송 서류가 법원에 제출되었으나 상세 문서가 아직 공개되지 않은 초기 단계입니다.
+- **시작 (Started)**: 공식적인 법적 절차가 개시된 상태입니다.
+- **1심 (1st Instance)**: 지방법원 수준에서 심리가 진행 중인 소송입니다.
+- **판결 (Decision)**: 해당 법원의 최종 판결이 내려진 상태입니다.
+- **항소 (Appeal)**: 상급 법원에 항소하여 2심 이상의 절차가 진행 중인 소송입니다.
+- **종료/종결 (Closed)**: 판결 확정 또는 합의 등을 통해 모든 절차가 마무리된 상태입니다.
+
+---
 **AI Litigation Dashboard Team**
-*For support and feature requests, please contact our data team.*
+*Data-driven Insights for Tomorrow's Legal Landscape.*
+*For support and feature requests, please check the [README.md](../README.md).*
