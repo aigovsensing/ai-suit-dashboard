@@ -48,13 +48,47 @@ const FULL_NAMES = {
     'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
     'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming',
     'DC': 'District of Columbia',
-    // Countries
-    'us': 'USA', 'kr': 'South Korea', 'de': 'Germany', 'gb': 'United Kingdom', 'fr': 'France',
-    'ca': 'Canada', 'jp': 'Japan', 'cn': 'China', 'in': 'India', 'au': 'Australia', 'br': 'Brazil',
-    'it': 'Italy', 'es': 'Spain', 'ru': 'Russia', 'mx': 'Mexico', 'nl': 'Netherlands', 'se': 'Sweden',
-    'sg': 'Singapore', 'il': 'Israel', 'ch': 'Switzerland', 'at': 'Austria', 'be': 'Belgium',
-    'fi': 'Finland', 'no': 'Norway', 'dk': 'Denmark', 'ie': 'Ireland', 'nz': 'New Zealand',
-    'tw': 'Taiwan', 'hk': 'Hong Kong', 'mo': 'Macau', 'pk': 'Pakistan', 'tr': 'Turkey', 'za': 'South Africa'
+    
+    // Global Countries (ISO 3166-1 alpha-2)
+    'af': 'Afghanistan', 'al': 'Albania', 'dz': 'Algeria', 'ad': 'Andorra', 'ao': 'Angola',
+    'ag': 'Antigua and Barbuda', 'ar': 'Argentina', 'am': 'Armenia', 'au': 'Australia', 'at': 'Austria',
+    'az': 'Azerbaijan', 'bs': 'Bahamas', 'bh': 'Bahrain', 'bd': 'Bangladesh', 'bb': 'Barbados',
+    'by': 'Belarus', 'be': 'Belgium', 'bz': 'Belize', 'bj': 'Benin', 'bt': 'Bhutan',
+    'bo': 'Bolivia', 'ba': 'Bosnia and Herzegovina', 'bw': 'Botswana', 'br': 'Brazil', 'bn': 'Brunei',
+    'bg': 'Bulgaria', 'bf': 'Burkina Faso', 'bi': 'Burundi', 'kh': 'Cambodia', 'cm': 'Cameroon',
+    'ca': 'Canada', 'cv': 'Cape Verde', 'cf': 'Central African Republic', 'td': 'Chad', 'cl': 'Chile',
+    'cn': 'China', 'co': 'Colombia', 'km': 'Comoros', 'cg': 'Congo', 'cd': 'DR Congo',
+    'cr': 'Costa Rica', 'hr': 'Croatia', 'cu': 'Cuba', 'cy': 'Cyprus', 'cz': 'Czech Republic',
+    'dk': 'Denmark', 'dj': 'Djibouti', 'dm': 'Dominica', 'do': 'Dominican Republic', 'ec': 'Ecuador',
+    'eg': 'Egypt', 'sv': 'El Salvador', 'gq': 'Equatorial Guinea', 'er': 'Eritrea', 'ee': 'Estonia',
+    'et': 'Ethiopia', 'fj': 'Fiji', 'fi': 'Finland', 'fr': 'France', 'ga': 'Gabon',
+    'gm': 'Gambia', 'ge': 'Georgia', 'de': 'Germany', 'gh': 'Ghana', 'gr': 'Greece',
+    'gd': 'Grenada', 'gt': 'Guatemala', 'gn': 'Guinea', 'gw': 'Guinea-Bissau', 'gy': 'Guyana',
+    'ht': 'Haiti', 'hn': 'Honduras', 'hu': 'Hungary', 'is': 'Iceland', 'in': 'India',
+    'id': 'Indonesia', 'ir': 'Iran', 'iq': 'Iraq', 'ie': 'Ireland', 'il': 'Israel',
+    'it': 'Italy', 'jm': 'Jamaica', 'jp': 'Japan', 'jo': 'Jordan', 'kz': 'Kazakhstan',
+    'ke': 'Kenya', 'ki': 'Kiribati', 'kp': 'North Korea', 'kr': 'South Korea', 'kw': 'Kuwait',
+    'kg': 'Kyrgyzstan', 'la': 'Laos', 'lv': 'Latvia', 'lb': 'Lebanon', 'ls': 'Lesotho',
+    'lr': 'Liberia', 'ly': 'Libya', 'li': 'Liechtenstein', 'lt': 'Lithuania', 'lu': 'Luxembourg',
+    'mg': 'Madagascar', 'mw': 'Malawi', 'my': 'Malaysia', 'mv': 'Maldives', 'ml': 'Mali',
+    'mt': 'Malta', 'mh': 'Marshall Islands', 'mr': 'Mauritania', 'mu': 'Mauritius', 'mx': 'Mexico',
+    'fm': 'Micronesia', 'md': 'Moldova', 'mc': 'Monaco', 'mn': 'Mongolia', 'me': 'Montenegro',
+    'ma': 'Morocco', 'mz': 'Mozambique', 'mm': 'Myanmar', 'na': 'Namibia', 'nr': 'Nauru',
+    'np': 'Nepal', 'nl': 'Netherlands', 'nz': 'New Zealand', 'ni': 'Nicaragua', 'ne': 'Niger',
+    'ng': 'Nigeria', 'mk': 'North Macedonia', 'no': 'Norway', 'om': 'Oman', 'pk': 'Pakistan',
+    'pw': 'Palau', 'pa': 'Panama', 'pg': 'Papua New Guinea', 'py': 'Paraguay', 'pe': 'Peru',
+    'ph': 'Philippines', 'pl': 'Poland', 'pt': 'Portugal', 'qa': 'Qatar', 'ro': 'Romania',
+    'ru': 'Russia', 'rw': 'Rwanda', 'kn': 'Saint Kitts and Nevis', 'lc': 'Saint Lucia', 'vc': 'Saint Vincent and the Grenadines',
+    'ws': 'Samoa', 'sm': 'San Marino', 'st': 'Sao Tome and Principe', 'sa': 'Saudi Arabia', 'sn': 'Senegal',
+    'rs': 'Serbia', 'sc': 'Seychelles', 'sl': 'Sierra Leone', 'sg': 'Singapore', 'sk': 'Slovakia',
+    'si': 'Slovenia', 'sb': 'Solomon Islands', 'so': 'Somalia', 'za': 'South Africa', 'ss': 'South Sudan',
+    'es': 'Spain', 'lk': 'Sri Lanka', 'sd': 'Sudan', 'sr': 'Suriname', 'se': 'Sweden',
+    'ch': 'Switzerland', 'sy': 'Syria', 'tw': 'Taiwan', 'tj': 'Tajikistan', 'tz': 'Tanzania',
+    'th': 'Thailand', 'tl': 'Timor-Leste', 'tg': 'Togo', 'to': 'Tonga', 'tt': 'Trinidad and Tobago',
+    'tn': 'Tunisia', 'tr': 'Turkey', 'tm': 'Turkmenistan', 'tv': 'Tuvalu', 'ug': 'Uganda',
+    'ua': 'Ukraine', 'ae': 'United Arab Emirates', 'gb': 'United Kingdom', 'us': 'United States', 'uy': 'Uruguay',
+    'uz': 'Uzbekistan', 'vu': 'Vanuatu', 've': 'Venezuela', 'vn': 'Vietnam', 'ye': 'Yemen',
+    'zm': 'Zambia', 'zw': 'Zimbabwe', 'hk': 'Hong Kong', 'mo': 'Macau', 'pr': 'Puerto Rico'
 };
 
 
@@ -523,11 +557,12 @@ function renderMap(stats, countryType) {
         pathEl.style.removeProperty('--intensity');
 
         const baseDisplayCode = (COUNTRY_LABEL_OVERRIDE[id] || id).toUpperCase();
-        const fullName = FULL_NAMES[id] || baseDisplayCode;
+        const fullName = FULL_NAMES[id];
+        const displayInfo = fullName ? `${baseDisplayCode} (${fullName})` : baseDisplayCode;
         const labelElem = document.querySelector(`.state-label[data-loc="${id}"]`);
         
         // Tooltip should always show, even with 0 cases
-        pathEl.onmouseover = (e) => showTooltip(e, `${fullName}: ${cases.length} litigation(s)`);
+        pathEl.onmouseover = (e) => showTooltip(e, `${displayInfo}: ${cases.length} litigation(s)`);
         pathEl.onmouseout = hideTooltip;
 
         if (cases.length > 0) {
@@ -538,7 +573,7 @@ function renderMap(stats, countryType) {
             const intensity = 0.3 + (0.7 * (Math.log(cases.length + 1) / Math.log(maxCount + 1)));
             pathEl.style.setProperty('--intensity', intensity);
             
-            pathEl.onclick = () => showStateCasesModal(fullName, cases);
+            pathEl.onclick = () => showStateCasesModal(displayInfo, cases);
 
             if (labelElem) {
                 labelElem.textContent = `${baseDisplayCode} (${cases.length})`;
@@ -546,7 +581,7 @@ function renderMap(stats, countryType) {
             }
         } else {
             // Case where length is 0
-            pathEl.onclick = () => showStateCasesModal(fullName, []);
+            pathEl.onclick = () => showStateCasesModal(displayInfo, []);
             if (labelElem) {
                 labelElem.textContent = baseDisplayCode;
                 labelElem.classList.remove('active-label');
